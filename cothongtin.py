@@ -6,6 +6,8 @@ class InformedSearch(PuzzleSolverBase):
         super().__init__(initial_state, goal_state)
 
     def greedy(self, start):
+        if start == self.goal_state:
+            return []
         pq = [(self.heuristic(start), start, [])]
         seen = set()
         while pq:
@@ -25,16 +27,14 @@ class InformedSearch(PuzzleSolverBase):
         return None
 
     def a_star(self, start):
+        if start == self.goal_state:
+            return []
         pq = [(self.heuristic(start), 0, start, [])]
         g_map = {start: 0}
-        visited = set()
         while pq:
             f, g, current, path = heapq.heappop(pq)
             if current == self.goal_state:
                 return path
-            if current in visited:
-                continue
-            visited.add(current)
             blank_i, blank_j = self.find_blank(current)
             for move, (di, dj) in self.step.items():
                 new_i, new_j = blank_i + di, blank_j + dj
@@ -66,11 +66,14 @@ class InformedSearch(PuzzleSolverBase):
                         visited.add(new_state)
                         new_path = path + [move]
                         result, next_bound = search(new_state, g + 1, bound, visited, new_path)
+                        visited.remove(new_state)  # Backtrack
                         if result is not None:
                             return result, f
                         min_bound = min(min_bound, next_bound)
             return None, min_bound
 
+        if start == self.goal_state:
+            return []
         bound = self.heuristic(start)
         while True:
             visited = set([start])

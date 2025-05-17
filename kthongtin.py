@@ -7,23 +7,27 @@ class UninformedSearch(PuzzleSolverBase):
         super().__init__(initial_state, goal_state)
 
     def bfs(self, start):
+        if start == self.goal_state:
+            return []
         queue = deque([(start, [])])
         seen = set([start])
         while queue:
             current, path = queue.popleft()
-            if current == self.goal_state:
-                return path
             blank_i, blank_j = self.find_blank(current)
             for move, (di, dj) in self.step.items():
                 new_i, new_j = blank_i + di, blank_j + dj
                 if 0 <= new_i < 3 and 0 <= new_j < 3:
                     new_state = self.swap(current, blank_i, blank_j, new_i, new_j)
                     if new_state not in seen:
+                        if new_state == self.goal_state:
+                            return path + [move]
                         queue.append((new_state, path + [move]))
                         seen.add(new_state)
         return None
 
     def dfs(self, start, max_depth=50):
+        if start == self.goal_state:
+            return []
         stack = [(start, [])]
         seen = set()
         while stack:
@@ -44,6 +48,8 @@ class UninformedSearch(PuzzleSolverBase):
         return None
 
     def ucs(self, start):
+        if start == self.goal_state:
+            return []
         pq = [(0, start, [])]
         cost_map = {start: 0}
         while pq:
@@ -61,7 +67,7 @@ class UninformedSearch(PuzzleSolverBase):
                         heapq.heappush(pq, (new_cost, new_state, path + [move]))
         return None
 
-    def ids(self, start):
+    def ids(self, start, max_depth_limit=50):
         def dls(state, depth, path, visited):
             if state == self.goal_state:
                 return path
@@ -80,11 +86,10 @@ class UninformedSearch(PuzzleSolverBase):
             return None
 
         depth = 0
-        while True:
+        while depth <= max_depth_limit:
             visited = set([start])
             result = dls(start, depth, [], visited)
             if result is not None:
                 return result
             depth += 1
-            if depth > 50:
-                return None
+        return None

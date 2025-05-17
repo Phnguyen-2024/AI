@@ -1,12 +1,22 @@
 import random
 import heapq
-import itertools
 from collections import deque
 from utils import PuzzleSolverBase
+
 
 class ComplexSearch(PuzzleSolverBase):
     def __init__(self, initial_state, goal_state):
         super().__init__(initial_state, goal_state)
+
+    def is_solvable(self, state):
+        """Kiểm tra xem trạng thái có thể giải được không dựa trên số lần hoán vị."""
+        flat_state = [num for row in state for num in row if num != 0]
+        inversions = 0
+        for i in range(len(flat_state)):
+            for j in range(i + 1, len(flat_state)):
+                if flat_state[i] > flat_state[j]:
+                    inversions += 1
+        return inversions % 2 == 0
 
     def observe(self, state, noise_probability=0.1):
         blank_i, blank_j = self.find_blank(state)
@@ -21,19 +31,24 @@ class ComplexSearch(PuzzleSolverBase):
         return (blank_i, blank_j), neighbors
 
     def partially_observable_search(self, initial_percept, noise_probability=0.1, max_belief_size=100):
-        def generate_all_states():
-            perms = list(itertools.permutations(range(9)))
-            states = []
-            for perm in perms:
-                state = [[perm[i * 3 + j] for j in range(3)] for i in range(3)]
-                states.append(tuple(tuple(row) for row in state))
-            return states
+        # Kiểm tra tính khả thi của trạng thái ban đầu
+        if not self.is_solvable(self.initial_state):
+            return None
 
-        def states_matching_observation(observation):
+        # Đảm bảo định dạng trạng thái
+        self.initial_state = tuple(tuple(row) for row in self.initial_state)
+        self.goal_state = tuple(tuple(row) for row in self.goal_state)
+
+        def states_matching_observation(observation, current_belief):
+            if not current_belief:
+                return set()
             blank_pos, neighbors = observation
             blank_i, blank_j = blank_pos
-            matching_states = []
-            for state in generate_all_states():
+            # Nếu neighbors là frozenset (từ possible_percepts), chuyển về dict
+            if isinstance(neighbors, frozenset):
+                neighbors = dict(neighbors)
+            matching_states = set()
+            for state in current_belief:
                 if state[blank_i][blank_j] != 0:
                     continue
                 match = True
@@ -48,8 +63,8 @@ class ComplexSearch(PuzzleSolverBase):
                         match = False
                         break
                 if match:
-                    matching_states.append(state)
-            return set(random.sample(matching_states, min(len(matching_states), max_belief_size)))
+                    matching_states.add(state)
+            return matching_states
 
         def predict(belief_state, action):
             new_belief = set()
@@ -62,18 +77,17 @@ class ComplexSearch(PuzzleSolverBase):
         def possible_percepts(belief_state):
             percepts = set()
             for state in belief_state:
-                percept = self.observe(state, noise_probability)
-                percepts.add(tuple(percept))
+                blank_i, blank_j = self.find_blank(state)
+                neighbors = {}
+                for move, (di, dj) in self.step.items():
+                    new_i, new_j = blank_i + di, blank_j + dj
+                    if 0 <= new_i < 3 and 0 <= new_j < 3:
+                        neighbors[move] = state[new_i][new_j]
+                percepts.add(((blank_i, blank_j), frozenset(neighbors.items())))
             return percepts
 
         def update(predicted_belief, percept):
-            percept = tuple(percept)
-            new_belief = set()
-            for state in predicted_belief:
-                state_percept = tuple(self.observe(state, noise_probability))
-                if state_percept == percept:
-                    new_belief.add(state)
-            return new_belief
+            return states_matching_observation(percept, predicted_belief)
 
         def limit_belief_state(belief_state):
             if len(belief_state) <= max_belief_size:
@@ -91,8 +105,13 @@ class ComplexSearch(PuzzleSolverBase):
         def contains_goal(belief_state):
             return self.goal_state in belief_state
 
-        initial_belief = states_matching_observation(initial_percept)
+        # Initialize belief state
+        initial_belief = {self.initial_state}
+        initial_belief = states_matching_observation(initial_percept, initial_belief)
         initial_belief = limit_belief_state(initial_belief)
+
+        if contains_goal(initial_belief):
+            return []
 
         pq = [(belief_heuristic(initial_belief), 0, initial_belief, [])]
         g_map = {frozenset(initial_belief): 0}
@@ -123,53 +142,82 @@ class ComplexSearch(PuzzleSolverBase):
                             h = belief_heuristic(new_belief)
                             f = new_g + h
                             heapq.heappush(pq, (f, new_g, new_belief, path + [action]))
-
         return None
 
-    def tabu_search(self, start, tabu_size=100, max_iterations=1000):
+    def search_no_observation(self, start, max_iterations=1000):
+        # Đảm bảo định dạng trạng thái
+        start = tuple(tuple(row) for row in start)
+        if start == self.goal_state:
+            return []
+        
+        # Kiểm tra tính khả thi
+        if not self.is_solvable(start):
+            return None
+
         current = start
         path = []
-        tabu_list = deque(maxlen=tabu_size)
         iteration = 0
         while iteration < max_iterations:
-            if current == self.goal_state:
-                return path
-            tabu_list.append(current)
-            best_neighbor = None
-            best_move = None
-            best_h = float('inf')
             blank_i, blank_j = self.find_blank(current)
+            possible_moves = []
             for move, (di, dj) in self.step.items():
                 new_i, new_j = blank_i + di, blank_j + dj
                 if 0 <= new_i < 3 and 0 <= new_j < 3:
-                    new_state = self.swap(current, blank_i, blank_j, new_i, new_j)
-                    if new_state not in tabu_list:
-                        h = self.heuristic(new_state)
-                        if h < best_h:
-                            best_h = h
-                            best_neighbor = new_state
-                            best_move = move
-            if best_neighbor is None:
-                possible_moves = []
-                for move, (di, dj) in self.step.items():
-                    new_i, new_j = blank_i + di, blank_j + dj
-                    if 0 <= new_i < 3 and 0 <= new_j < 3:
-                        new_state = self.swap(current, blank_i, blank_j, new_i, new_j)
-                        if new_state not in tabu_list:
-                            possible_moves.append((new_state, move))
-                if possible_moves:
-                    best_neighbor, best_move = random.choice(possible_moves)
-                else:
-                    return None
-            path.append(best_move)
-            current = best_neighbor
+                    possible_moves.append(move)
+            if not possible_moves:
+                return None
+            move = random.choice(possible_moves)
+            current = self.apply_move(current, move)
+            path.append(move)
+            if current == self.goal_state:
+                return path
             iteration += 1
         return None
 
-    def search_no_observation(self, start):
-        # Placeholder for search with no observation
-        return None
+    def and_or_search(self, start, max_depth=50):
+        # Đảm bảo định dạng trạng thái
+        start = tuple(tuple(row) for row in start)
+        if start == self.goal_state:
+            return []
+        
+        # Kiểm tra tính khả thi
+        if not self.is_solvable(start):
+            return None
 
-    def and_or_search(self, start):
-        # Placeholder for AND-OR search
-        return None
+        def simulate_disturbance(state):
+            blank_i, blank_j = self.find_blank(state)
+            possible_moves = []
+            for move, (di, dj) in self.step.items():
+                new_i, new_j = blank_i + di, blank_j + dj
+                if 0 <= new_i < 3 and 0 <= new_j < 3:
+                    possible_moves.append(move)
+            if possible_moves and random.random() < 0.2:  # 20% chance of disturbance
+                move = random.choice(possible_moves)
+                new_state = self.apply_move(state, move)
+                # Kiểm tra tính khả thi sau nhiễu
+                if self.is_solvable(new_state):
+                    return new_state
+            return state
+
+        def search(state, path, depth, visited):
+            if state == self.goal_state:
+                return path
+            if depth > max_depth:
+                return None
+            if state in visited:
+                return None
+            visited.add(state)
+            blank_i, blank_j = self.find_blank(state)
+            for move, (di, dj) in self.step.items():
+                new_i, new_j = blank_i + di, blank_j + dj
+                if 0 <= new_i < 3 and 0 <= new_j < 3:
+                    new_state = self.swap(state, blank_i, blank_j, new_i, new_j)
+                    # Simulate disturbance (OR node)
+                    disturbed_state = simulate_disturbance(new_state)
+                    result = search(disturbed_state, path + [move], depth + 1, visited)
+                    if result is not None:
+                        return result
+            return None
+
+        visited = set()
+        return search(start, [], 0, visited)
