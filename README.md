@@ -1,4 +1,11 @@
-# 8 Puzzle
+# 8 Puzzle - Trần Hồ Phương Nguyên 23110271
+
+## Video báo cáo
+https://youtu.be/MJBTyZikIO8
+
+## Link github
+https://github.com/Phnguyen-2024/AI.git
+
 ## 1. Mục tiêu
 Bài toán 8-puzzle là một dạng bài toán cổ điển trong trí tuệ nhân tạo, thuộc lớp các bài toán tìm kiếm trong không gian trạng thái. Đề tài này hướng đến việc giải bài toán 8-puzzle bằng nhiều phương pháp tìm kiếm khác nhau, từ cơ bản đến nâng cao, nhằm đạt được các mục tiêu cụ thể sau:
 ### 1.1. Mô hình hóa và giải quyết bài toán 8-puzzle
@@ -527,6 +534,3 @@ Có thể không tìm được lời giải tối ưu.
 - Một số thuật toán, như Q-Learning, cần thời gian hội tụ dài, có thể cải thiện bằng cách tối ưu hàm phần thưởng hoặc kết hợp với học sâu.
 
 - GUI có thể được nâng cấp để hiển thị trực quan hóa chi tiết hơn, như biểu đồ không gian trạng thái hoặc thống kê hiệu suất.
-
-## Video báo cáo
-https://youtu.be/MJBTyZikIO8
