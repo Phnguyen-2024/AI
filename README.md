@@ -14,13 +14,13 @@ Mỗi nhóm thuật toán đại diện cho một hướng tiếp cận khác nh
 
 #### a. Thuật toán tìm kiếm không thông tin (Uninformed Search)
 
-BFS (Breadth-First Search): Tìm theo bề rộng, đảm bảo tìm ra lời giải ngắn nhất nếu tồn tại.
+- BFS (Breadth-First Search): Tìm theo bề rộng, đảm bảo tìm ra lời giải ngắn nhất nếu tồn tại.
 
-DFS (Depth-First Search): Tìm theo chiều sâu, yêu cầu giới hạn độ sâu để tránh lặp vô tận.
+- DFS (Depth-First Search): Tìm theo chiều sâu, yêu cầu giới hạn độ sâu để tránh lặp vô tận.
 
-UCS (Uniform Cost Search): Ưu tiên mở rộng trạng thái có chi phí thấp nhất.
+- UCS (Uniform Cost Search): Ưu tiên mở rộng trạng thái có chi phí thấp nhất.
 
-IDS (Iterative Deepening Search): Kết hợp BFS và DFS để tận dụng ưu điểm của cả hai.
+- IDS (Iterative Deepening Search): Kết hợp BFS và DFS để tận dụng ưu điểm của cả hai.
 
 #### b. Thuật toán tìm kiếm có thông tin (Informed Search)
 
