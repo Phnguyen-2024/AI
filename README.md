@@ -12,7 +12,8 @@ Bài toán 8-puzzle là một dạng bài toán cổ điển trong trí tuệ nh
 ### 1.2. Triển khai và thử nghiệm nhiều nhóm thuật toán tìm kiếm
 Mỗi nhóm thuật toán đại diện cho một hướng tiếp cận khác nhau trong việc giải quyết bài toán:
 
-a. Thuật toán tìm kiếm không thông tin (Uninformed Search)
+#### a. Thuật toán tìm kiếm không thông tin (Uninformed Search)
+
 BFS (Breadth-First Search): Tìm theo bề rộng, đảm bảo tìm ra lời giải ngắn nhất nếu tồn tại.
 
 DFS (Depth-First Search): Tìm theo chiều sâu, yêu cầu giới hạn độ sâu để tránh lặp vô tận.
@@ -21,14 +22,16 @@ UCS (Uniform Cost Search): Ưu tiên mở rộng trạng thái có chi phí th�
 
 IDS (Iterative Deepening Search): Kết hợp BFS và DFS để tận dụng ưu điểm của cả hai.
 
-b. Thuật toán tìm kiếm có thông tin (Informed Search)
+#### b. Thuật toán tìm kiếm có thông tin (Informed Search)
+
 Greedy Best-First Search: Dựa hoàn toàn vào hàm heuristic, đi đến trạng thái có ước lượng gần đích nhất.
 
 A* (A-Star Search): Kết hợp giữa chi phí thực tế và heuristic, vừa nhanh vừa tối ưu.
 
 IDA* (Iterative Deepening A*): Tiết kiệm bộ nhớ hơn A*, duyệt theo ngưỡng f = g + h.
 
-c. Thuật toán tìm kiếm cục bộ (Local Search)
+#### c. Thuật toán tìm kiếm cục bộ (Local Search)
+
 Simple Hill Climbing: Tăng dần theo hướng cải thiện.
 
 Steepest Ascent Hill Climbing: Chọn hướng cải thiện tốt nhất tại mỗi bước.
@@ -41,21 +44,24 @@ Beam Search: Duy trì một số lượng nhỏ các trạng thái tốt nhất 
 
 Genetic Algorithm: Sử dụng khái niệm quần thể, lai ghép và đột biến để tiến hóa lời giải.
 
-d. Thuật toán trong môi trường phức tạp (Complex Environment Search)
+#### d. Thuật toán trong môi trường phức tạp (Complex Environment Search)
+
 Partially Observable Search: Tìm kiếm trong điều kiện chỉ quan sát một phần trạng thái.
 
 Search with No Observation: Giải bài toán khi không có thông tin quan sát nào.
 
 AND-OR Search: Xử lý môi trường không chắc chắn bằng cây quyết định phức hợp.
 
-e. Tìm kiếm thỏa mãn ràng buộc (Constraint Satisfaction Problem - CSP)
+#### e. Tìm kiếm thỏa mãn ràng buộc (Constraint Satisfaction Problem - CSP)
+
 AC-3 (Arc Consistency): Đảm bảo miền giá trị không mâu thuẫn thông qua loại bỏ dần.
 
 Backtracking Search: Tìm lời giải bằng cách thử và quay lui khi vi phạm ràng buộc.
 
 Forward Checking: Kiểm tra trước để tránh mở rộng những nhánh không hợp lệ.
 
-f. Học tăng cường (Reinforcement Learning)
+#### f. Học tăng cường (Reinforcement Learning)
+
 Q-Learning: Học chính sách hành động tối ưu qua tương tác với môi trường mà không cần mô hình trạng thái.
 
 ### 1.3. Xây dựng giao diện người dùng trực quan
