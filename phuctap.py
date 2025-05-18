@@ -144,13 +144,11 @@ class ComplexSearch(PuzzleSolverBase):
                             heapq.heappush(pq, (f, new_g, new_belief, path + [action]))
         return None
 
-    def search_no_observation(self, start, max_iterations=1000):
-        # Đảm bảo định dạng trạng thái
+    def search_no_observation(self, start, max_iterations=5000):
         start = tuple(tuple(row) for row in start)
         if start == self.goal_state:
             return []
         
-        # Kiểm tra tính khả thi
         if not self.is_solvable(start):
             return None
 
@@ -166,7 +164,10 @@ class ComplexSearch(PuzzleSolverBase):
                     possible_moves.append(move)
             if not possible_moves:
                 return None
-            move = random.choice(possible_moves)
+            # Bias towards moves that reduce heuristic value
+            moves = [(move, self.heuristic(self.apply_move(current, move))) for move in possible_moves]
+            moves.sort(key=lambda x: x[1])
+            move = moves[0][0]  # Choose move with lowest heuristic
             current = self.apply_move(current, move)
             path.append(move)
             if current == self.goal_state:
@@ -175,12 +176,10 @@ class ComplexSearch(PuzzleSolverBase):
         return None
 
     def and_or_search(self, start, max_depth=50):
-        # Đảm bảo định dạng trạng thái
         start = tuple(tuple(row) for row in start)
         if start == self.goal_state:
             return []
         
-        # Kiểm tra tính khả thi
         if not self.is_solvable(start):
             return None
 
@@ -194,7 +193,6 @@ class ComplexSearch(PuzzleSolverBase):
             if possible_moves and random.random() < 0.2:  # 20% chance of disturbance
                 move = random.choice(possible_moves)
                 new_state = self.apply_move(state, move)
-                # Kiểm tra tính khả thi sau nhiễu
                 if self.is_solvable(new_state):
                     return new_state
             return state
@@ -208,16 +206,23 @@ class ComplexSearch(PuzzleSolverBase):
                 return None
             visited.add(state)
             blank_i, blank_j = self.find_blank(state)
-            for move, (di, dj) in self.step.items():
-                new_i, new_j = blank_i + di, blank_j + dj
-                if 0 <= new_i < 3 and 0 <= new_j < 3:
-                    new_state = self.swap(state, blank_i, blank_j, new_i, new_j)
-                    # Simulate disturbance (OR node)
-                    disturbed_state = simulate_disturbance(new_state)
-                    result = search(disturbed_state, path + [move], depth + 1, visited)
-                    if result is not None:
-                        return result
+            # Sort moves by heuristic value
+            moves = [(move, self.heuristic(self.apply_move(state, move)))
+                    for move, (di, dj) in self.step.items()
+                    if 0 <= blank_i + di < 3 and 0 <= blank_j + dj < 3]
+            moves.sort(key=lambda x: x[1])
+            for move, _ in moves:
+                new_state = self.swap(state, blank_i, blank_j,
+                                    blank_i + self.step[move][0],
+                                    blank_j + self.step[move][1])
+                disturbed_state = simulate_disturbance(new_state)
+                # Skip if disturbed state is worse
+                if self.heuristic(disturbed_state) > self.heuristic(new_state) + 2:
+                    continue
+                result = search(disturbed_state, path + [move], depth + 1, visited.copy())
+                if result is not None:
+                    return result
             return None
 
-        visited = set()
+        visited = set([start])
         return search(start, [], 0, visited)

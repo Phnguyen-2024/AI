@@ -88,6 +88,7 @@ Hiệu suất giảm khi không gian trạng thái lớn.
 
 - Tính phù hợp: Phù hợp khi cần lời giải tối ưu và không gian trạng thái không quá lớn, nhưng không hiệu quả cho các trường hợp phức tạp.
 
+![alt text](gif/bfs.gif)
 
 #### 2.1.2. Depth-First Search (DFS)
 - Nguyên lý hoạt động: Sử dụng ngăn xếp (stack) để duyệt sâu vào một nhánh trước khi quay lại nhánh khác, giới hạn độ sâu để tránh vòng lặp vô hạn.
@@ -106,7 +107,7 @@ Có thể bị kẹt trong các nhánh sâu không có lời giải.
 
 - Tính phù hợp: Ít phù hợp với 8-puzzle do không đảm bảo tối ưu và dễ bị kẹt trong không gian trạng thái lớn.
 
-
+![alt text](gif/dfs.gif)
 
 #### 2.1.3. Uniform Cost Search (UCS)
 - Nguyên lý hoạt động: Mở rộng trạng thái có chi phí thấp nhất (số bước di chuyển) bằng hàng đợi ưu tiên.
@@ -125,6 +126,7 @@ Chậm hơn BFS trong trường hợp chi phí đồng nhất.
 
 - Tính phù hợp: Phù hợp khi cần lời giải tối ưu, nhưng không hiệu quả bằng các thuật toán có heuristic.
 
+![alt text](gif/ucs.gif)
 
 #### 2.1.4. Iterative Deepening Search (IDS)
 - Nguyên lý hoạt động: Kết hợp DFS với giới hạn độ sâu tăng dần, lặp lại cho đến khi tìm được mục tiêu.
@@ -141,8 +143,19 @@ Lặp lại các trạng thái ở các mức độ sâu thấp, gây lãng phí
 
 - Tính phù hợp: Phù hợp khi cần tối ưu với bộ nhớ hạn chế, nhưng chậm hơn BFS trong một số trường hợp.
 
+![alt text](gif/ids.gif)
 
 ### So sánh các thuật toán
+![alt text](Bangsosanh/Khongthongtin.png)
+
+#### Nhận xét
+- Thuật toán BFS hoạt động hiệu quả nhất, vừa nhanh vừa ít bước.
+
+- DFS là thuật toán kém hiệu quả nhất, mất nhiều bước và thời gian xử lý lâu.
+
+- UCS cho kết quả tương tự BFS nhưng thời gian xử lý có phần chậm hơn.
+
+- IDS nằm ở mức trung bình, tốt hơn DFS nhưng không bằng BFS và UCS.
 
 ### 2.2. Tìm kiếm có thông tin (Informed Search)
 #### 2.2.1. Greedy Best-First Search
@@ -162,6 +175,8 @@ Có thể bị kẹt trong các trạng thái cục bộ.
 
 - Tính phù hợp: Phù hợp khi ưu tiên tốc độ hơn tính tối ưu, nhưng cần cải thiện để tránh vòng lặp.
 
+![alt text](gif/greedy.gif)
+
 #### 2.2.2. A* Search
 - Nguyên lý hoạt động: Kết hợp chi phí thực tế ((g)) và heuristic ((h)) để chọn trạng thái có (f = g + h) thấp nhất.
 
@@ -179,6 +194,8 @@ Phụ thuộc vào chất lượng heuristic.
 
 - Tính phù hợp: Rất phù hợp với 8-puzzle do đảm bảo tối ưu và hiệu quả với heuristic khoảng cách Manhattan.
 
+![alt text](gif/a_search.gif)
+
 #### 2.2.3. Iterative Deepening A* (IDA*)
 - Nguyên lý hoạt động: Kết hợp ý tưởng IDS với A*, sử dụng ngưỡng (f = g + h) để giới hạn tìm kiếm, tăng ngưỡng khi cần.
 
@@ -194,7 +211,15 @@ Có thể lặp lại các trạng thái, gây chậm hơn A* về thời gian.
 
 - Tính phù hợp: Phù hợp khi bộ nhớ hạn chế, nhưng chậm hơn A* trong một số trường hợp.
 
+![alt text](gif/ida.gif)
+
 ### So sánh các thuật toán
+![alt text](Bangsosanh/Cothongtin.png)
+
+#### Nhận xét
+- A* và IDA* cho kết quả tối ưu, cả về số bước lẫn thời gian thực hiện, thể hiện độ hiệu quả và ổn định cao.
+
+- Greedy hoạt động kém hiệu quả, mất nhiều bước và thời gian xử lý lâu hơn đáng kể so với hai thuật toán còn lại.
 
 ### 2.3. Tìm kiếm cục bộ (Local Search)
 #### 2.3.1. Simple Hill Climbing
@@ -214,6 +239,8 @@ Không đảm bảo tối ưu hoặc hoàn chỉnh.
 
 - Tính phù hợp: Ít phù hợp do dễ bị kẹt, nhưng có thể dùng cho các trường hợp đơn giản.
 
+![alt text](gif/simple.gif)
+
 #### 2.3.2. Steepest Ascent Hill Climbing
 - Nguyên lý hoạt động: Tương tự Simple Hill Climbing, nhưng luôn chọn trạng thái láng giềng tốt nhất trong tất cả các láng giềng.
 
@@ -230,6 +257,8 @@ Vẫn dễ bị kẹt tại cực trị cục bộ.
 Không đảm bảo tối ưu hoặc hoàn chỉnh.
 
 - Tính phù hợp: Tương tự Simple Hill Climbing, ít phù hợp cho 8-puzzle.
+
+![alt text](gif/steepest.gif)
 
 #### 2.3.3. Stochastic Hill Climbing
 - Nguyên lý hoạt động: Chọn ngẫu nhiên một trạng thái láng giềng tốt hơn hiện tại, thay vì chọn tốt nhất.
@@ -248,6 +277,8 @@ Phụ thuộc vào yếu tố ngẫu nhiên.
 
 - Tính phù hợp: Phù hợp hơn Simple Hill Climbing, nhưng vẫn không đảm bảo hiệu quả cao.
 
+![alt text](gif/stochastic.gif)
+
 #### 2.3.4. Simulated Annealing
 - Nguyên lý hoạt động: Chấp nhận cả trạng thái xấu hơn với xác suất giảm dần (dựa trên nhiệt độ), giúp thoát khỏi cực trị cục bộ.
 
@@ -264,6 +295,8 @@ Phụ thuộc vào tham số nhiệt độ và tốc độ làm nguội.
 Không đảm bảo tối ưu hoặc hoàn chỉnh.
 
 - Tính phù hợp: Phù hợp khi cần thoát cực trị cục bộ, nhưng cần điều chỉnh tham số cẩn thận.
+
+![alt text](gif/simulated.gif)
 
 #### 2.3.5. Beam Search
 - Nguyên lý hoạt động: Giữ lại một tập hợp trạng thái tốt nhất (beam width) ở mỗi bước, mở rộng từ các trạng thái này.
@@ -282,6 +315,8 @@ Phụ thuộc vào kích thước beam.
 
 - Tính phù hợp: Phù hợp khi cần giảm bộ nhớ, nhưng hiệu quả phụ thuộc vào beam width.
 
+![alt text](gif/beam.gif)
+
 #### 2.3.6. Genetic Algorithm
 - Nguyên lý hoạt động: Tạo quần thể các chuỗi di chuyển, tiến hóa qua lai ghép, đột biến, và chọn lọc dựa trên hàm fitness (heuristic).
 
@@ -299,8 +334,16 @@ Không đảm bảo tối ưu hoặc hoàn chỉnh.
 
 - Tính phù hợp: Phù hợp cho không gian trạng thái phức tạp, nhưng cần điều chỉnh tham số để hiệu quả.
 
+![alt text](gif/genetic.gif)
 
 ### So sánh các thuật toán
+![alt text](Bangsosanh/Cucbo1.png)
+![alt text](Bangsosanh/Cucbo2.png)
+
+#### Nhận xét
+- Các thuật toán Beam Search, Simulated Annealing, Simple Hill Climbing, Steepest Ascent Hill Climbing và Stochastic Hill Climbing đều giải quyết bài toán rất nhanh và với số bước cực kỳ ít, cho thấy chúng hiệu quả cao trong không gian tìm kiếm nhỏ hoặc đơn giản.
+
+- Genetic Algorithm cũng đạt được kết quả tối ưu tương tự như các thuật toán khác, nhưng thời gian thực thi nhỉnh hơn một chút, phản ánh việc thuật toán này phức tạp hơn về mặt xử lý mặc dù vẫn cho kết quả tốt.
 
 
 ### 2.4. Tìm kiếm trong môi trường phức tạp (Complex Search)
@@ -321,6 +364,8 @@ Tốn bộ nhớ lớn để lưu trữ belief state.
 
 - Tính phù hợp: Phù hợp cho các biến thể phức tạp, nhưng không thực tế cho 8-puzzle cơ bản do độ phức tạp cao.
 
+![alt text](gif/nhinthay1phan.gif)
+
 #### 2.4.2. Search with No Observation
 - Nguyên lý hoạt động: Chọn di chuyển ngẫu nhiên, kiểm tra tính khả thi của trạng thái sau mỗi bước.
 
@@ -337,6 +382,8 @@ Không đảm bảo tìm được lời giải.
 Hiệu suất thấp do phụ thuộc vào ngẫu nhiên.
 
 - Tính phù hợp: Ít phù hợp do hiệu suất thấp, chỉ dùng trong trường hợp không có thông tin.
+
+![alt text](gif/knhinthay.gif)
 
 #### 2.4.3. AND-OR Search
 - Nguyên lý hoạt động: Xử lý nhiễu bằng cách mô hình hóa môi trường như cây AND-OR, mô phỏng nhiễu ngẫu nhiên.
@@ -355,6 +402,7 @@ Không đảm bảo tối ưu.
 
 - Tính phù hợp: Phù hợp cho các biến thể có nhiễu, nhưng phức tạp cho 8-puzzle cơ bản.
 
+![alt text](gif/and_or.gif)
 
 ### So sánh các thuật toán
 
@@ -377,6 +425,8 @@ Có thể không hiệu quả nếu không gian trạng thái lớn.
 
 - Tính phù hợp: Phù hợp cho các bài toán có ràng buộc rõ ràng, nhưng phức tạp hơn các thuật toán tìm kiếm truyền thống.
 
+![alt text](gif/ac-3.gif)
+
 #### 2.5.2. Backtracking Search
 - Nguyên lý hoạt động: Duyệt các trạng thái bằng cách thử từng di chuyển, quay lui khi gặp ngõ cụt.
 
@@ -393,6 +443,8 @@ Không tối ưu.
 Có thể chậm nếu không gian trạng thái lớn.
 
 - Tính phù hợp: Phù hợp cho các bài toán nhỏ, nhưng không hiệu quả bằng các thuật toán có heuristic.
+
+![alt text](gif/backtracking.gif)
 
 #### 2.5.3. Forward Checking
 - Nguyên lý hoạt động: Kết hợp backtracking với kiểm tra trước để loại bỏ các di chuyển không cải thiện heuristic.
@@ -411,7 +463,12 @@ Phụ thuộc vào chất lượng heuristic.
 
 - Tính phù hợp: Phù hợp khi cần cải thiện backtracking, nhưng không bằng A* hoặc IDA*.
 
+![alt text](gif/forward.gif)
+
 ### So sánh các thuật toán
+
+#### Nhận xét
+
 
 ### 2.6. Học tăng cường (Reinforcement Learning)
 #### Q-Learning
@@ -430,6 +487,14 @@ Yêu cầu nhiều lần lặp để hội tụ.
 Có thể không tìm được lời giải tối ưu.
 
 - Tính phù hợp: Phù hợp cho các bài toán cần học qua thử nghiệm, nhưng không hiệu quả cho 8-puzzle do không gian trạng thái lớn và cần thời gian học lâu.
+
+![alt text](gif/q_learning.gif)
+
+### So sánh các thuật toán
+![alt text](Bangsosanh/Hoccungco.png)
+
+#### Nhận xét 
+- Thuật toán Q-Learning đạt hiệu suất rất tốt với số bước giải tối ưu và thời gian thực thi nhanh. Điều này cho thấy Q-Learning có khả năng học và đưa ra lộ trình hiệu quả trong môi trường đã được huấn luyện, phù hợp cho các bài toán có thể khai thác kinh nghiệm để tối ưu hóa quá trình tìm kiếm.
 
 ## 3. Kết luận
 ### 3.1. Ưu điểm:

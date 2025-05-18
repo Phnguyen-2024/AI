@@ -44,12 +44,23 @@ class PuzzleSolverBase:
             current = self.apply_move(current, move)
         return current
 
+    # def heuristic(self, state):
+    #     total_distance = 0
+    #     for i in range(3):
+    #         for j in range(3):
+    #             value = state[i][j]
+    #             if value != 0:
+    #                 gi, gj = self.goal_positions[value]
+    #                 total_distance += abs(i - gi) + abs(j - gj)
+    #     return total_distance
+
     def heuristic(self, state):
-        total_distance = 0
+        distance = 0
+        goal = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]  # Default goal state
         for i in range(3):
             for j in range(3):
                 value = state[i][j]
                 if value != 0:
-                    gi, gj = self.goal_positions[value]
-                    total_distance += abs(i - gi) + abs(j - gj)
-        return total_distance
+                    target_i, target_j = divmod(value - 1, 3)
+                    distance += abs(i - target_i) + abs(j - target_j)
+        return distance
