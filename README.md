@@ -527,3 +527,6 @@ Có thể không tìm được lời giải tối ưu.
 - Một số thuật toán, như Q-Learning, cần thời gian hội tụ dài, có thể cải thiện bằng cách tối ưu hàm phần thưởng hoặc kết hợp với học sâu.
 
 - GUI có thể được nâng cấp để hiển thị trực quan hóa chi tiết hơn, như biểu đồ không gian trạng thái hoặc thống kê hiệu suất.
+
+## Video báo cáo
+https://youtu.be/MJBTyZikIO8
