@@ -406,6 +406,12 @@ Không đảm bảo tối ưu.
 
 ### So sánh các thuật toán
 
+![alt text](Bangsosanh/phuctap.png)
+
+#### Nhận xét
+- Search with No Observation chạy nhanh hơn một chút nhưng có thể rủi ro hơn trong môi trường thay đổi.
+
+- Partially Observable Search tuy chậm hơn, nhưng có khả năng thích nghi tốt hơn nhờ sử dụng quan sát.
 
 ### 2.5. Tìm kiếm dựa trên ràng buộc (Constraint Satisfaction Search)
 #### 2.5.1. AC-3
@@ -467,8 +473,14 @@ Phụ thuộc vào chất lượng heuristic.
 
 ### So sánh các thuật toán
 
-#### Nhận xét
+![alt text](Bangsosanh/rangbuoc.png)
 
+#### Nhận xét
+- Backtracking Search là thuật toán cơ bản, hoạt động bằng cách thử từng giá trị một và quay lui khi gặp mâu thuẫn, dễ bị lặp và mất thời gian nếu không được hỗ trợ bởi các kỹ thuật bổ sung.
+
+- AC-3 không trực tiếp tìm lời giải, mà hoạt động như một bước suy luận ràng buộc, giúp đơn giản hóa bài toán bằng cách loại bỏ các giá trị không hợp lệ trong miền biến, nhờ đó tăng hiệu quả cho các thuật toán tìm kiếm phía sau.
+
+- Forward Checking là sự cải tiến của backtracking, giúp phát hiện sớm mâu thuẫn ngay sau mỗi bước gán giá trị, từ đó giảm đáng kể số nhánh vô ích cần xét.
 
 ### 2.6. Học tăng cường (Reinforcement Learning)
 #### Q-Learning
