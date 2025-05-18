@@ -18,7 +18,7 @@ class ComplexSearch(PuzzleSolverBase):
                     inversions += 1
         return inversions % 2 == 0
 
-    def observe(self, state, noise_probability=0.1):
+    def observe(self, state, noise_probability=0.0):
         blank_i, blank_j = self.find_blank(state)
         neighbors = {}
         for move, (di, dj) in self.step.items():
@@ -30,7 +30,7 @@ class ComplexSearch(PuzzleSolverBase):
                     neighbors[move] = state[new_i][new_j]
         return (blank_i, blank_j), neighbors
 
-    def partially_observable_search(self, initial_percept, noise_probability=0.1, max_belief_size=100):
+    def partially_observable_search(self, initial_percept, noise_probability=0.0, max_belief_size=100):
         # Kiểm tra tính khả thi của trạng thái ban đầu
         if not self.is_solvable(self.initial_state):
             return None
